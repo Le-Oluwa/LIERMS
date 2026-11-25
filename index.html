@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LIERMS | Emergency Operations Console</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="layout">
+    <aside>
+        <div class="brand">
+            <div class="mark">+</div>
+            <div>
+                <b>LIERMS</b>
+                <small>LAGOS EMERGENCY OS</small>
+            </div>
+        </div>
+
+        <nav id="nav">
+            <button class="active" data-view="overview">
+                <span class="ico">▦</span> Command centre
+            </button>
+            <button data-view="incidents">
+                <span class="ico">◉</span> Incident register
+            </button>
+            <button data-view="resources">
+                <span class="ico">▣</span> Response resources
+            </button>
+            <button data-view="zones">
+                <span class="ico">◎</span> Coverage zones
+            </button>
+            <button data-view="hospitals">
+                <span class="ico">✚</span> Hospital coordination
+            </button>
+            <button data-view="audit">
+                <span class="ico">≡</span> Activity log
+            </button>
+
+            <div class="navgroup">WORKFORCE & COMMERCIAL</div>
+
+            <button data-view="workforce">
+                <span class="ico">✚</span> Workforce planner
+            </button>
+            <button data-view="memberships">
+                <span class="ico">▤</span> Memberships
+            </button>
+            <button data-view="billing">
+                <span class="ico">₦</span> Billing & claims
+            </button>
+            <button data-view="citizen">
+                <span class="ico">◉</span> Citizen portal
+            </button>
+        </nav>
+
+        <div class="aside-bottom">
+            <span class="dot"></span>
+            <strong>Simulation workspace</strong>
+            <br>
+            Local prototype · no agency connection
+            <br><br>
+            Operator: Demo dispatcher
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="top">
+            <div>
+                <div class="crumb">Lagos State / Emergency operations</div>
+                <strong>Emergency operations & workforce console</strong>
+            </div>
+            <div class="toolbar">
+                <span class="tag">DEMO MODE</span>
+                <button class="reset" id="reset">Reset demo</button>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- COMMAND CENTRE -->
+
+            <section id="overview" class="view active">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Operations overview</div>
+                        <h1>Command centre</h1>
+                        <div class="muted">
+                            112 / 767 · Simulated incident and resource coordination
+                        </div>
+                    </div>
+                    <button class="primary" id="newIncident">
+                        + New incident
+                    </button>
+                </div>
+
+                <div class="metrics" id="metrics"></div>
+
+                <div class="workspace">
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Statewide coverage</h2>
+                                <div class="muted">
+                                    12 proposed planning zones
+                                </div>
+                            </div>
+                            <button id="clearZone">All zones</button>
+                        </div>
+
+                        <div class="mapwrap">
+                            <svg id="map" viewBox="0 0 600 320"
+                                 aria-label="Schematic Lagos planning zone map">
+
+                                <defs>
+                                    <pattern id="grid" width="24" height="24"
+                                             patternUnits="userSpaceOnUse">
+                                        <path d="M24 0H0V24"
+                                              fill="none"
+                                              stroke="#d4e0d9"
+                                              stroke-width=".65"/>
+                                    </pattern>
+                                </defs>
+
+                                <rect width="600" height="320" fill="#e6eee8"/>
+                                <rect width="600" height="320" fill="url(#grid)"/>
+
+                                <path
+                                    d="M0 213 Q65 181 119 208T221 212
+                                    Q274 191 312 162T399 171
+                                    Q440 184 485 146T600 121
+                                    V211 Q524 218 470 233T369 230
+                                    Q315 246 263 259T155 258
+                                    Q83 254 0 277Z"
+                                    fill="#b6d7df"/>
+
+                                <path
+                                    d="M0 284 Q130 274 217 294
+                                    T387 277 T600 267V320H0Z"
+                                    fill="#b6d7df"/>
+
+                                <path
+                                    d="M18 185L97 159 153 142 236 123
+                                    303 111 393 90 490 83 575 52
+                                    M121 70L153 142 193 197 230 238
+                                    M236 123L243 179 285 217 356 259
+                                    481 265 575 241
+                                    M303 111L335 50 423 36
+                                    M97 159L70 232 24 263"
+                                    fill="none"
+                                    stroke="#fff"
+                                    stroke-width="6"
+                                    stroke-linejoin="round"/>
+
+                                <text x="365" y="204" fill="#628f9d"
+                                      font-size="12" font-style="italic">
+                                    Lagos Lagoon (schematic)
+                                </text>
+
+                                <text x="410" y="302" fill="#628f9d"
+                                      font-size="11" font-style="italic">
+                                    Atlantic Ocean
+                                </text>
+
+                                <g id="pins"></g>
+
+                            </svg>
+                        </div>
+
+                        <div class="maplegend">
+                            <span>
+                                <i class="legend-dot"
+                                   style="background:#c54a55"></i>
+                                Critical incident
+                            </span>
+                            <span>
+                                <i class="legend-dot"
+                                   style="background:#d39740"></i>
+                                Other open incident
+                            </span>
+                            <span>
+                                <i class="legend-dot"
+                                   style="background:#348c77"></i>
+                                No open incident
+                            </span>
+                            <span>Illustrative map · not for navigation</span>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Incident queue</h2>
+                                <div class="muted" id="queuecount"></div>
+                            </div>
+                            <span class="muted">Priority order</span>
+                        </div>
+
+                        <div class="filters" id="filters">
+                            <button data-filter="All" class="active">All</button>
+                            <button data-filter="Medical">Medical</button>
+                            <button data-filter="Fire">Fire</button>
+                            <button data-filter="Road rescue">Road</button>
+                            <button data-filter="Other">Other</button>
+                            <select id="zoneSelect"
+                                    aria-label="Filter by zone"></select>
+                        </div>
+
+                        <div class="incidentlist" id="queue"></div>
+                    </section>
+
+                </div>
+
+                <div class="lower">
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Selected incident</h2>
+                            <span class="muted" id="selectedId"></span>
+                        </div>
+                        <div class="panelbody" id="detail"></div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <div>
+                                <h2>Resource readiness</h2>
+                                <div class="muted">
+                                    Sample units across planning zones
+                                </div>
+                            </div>
+                            <button data-jump="resources">View all</button>
+                        </div>
+                        <div class="panelbody" id="quickResources"></div>
+                    </section>
+                </div>
+
+                <div class="notice">
+                    All incidents, unit IDs, readiness states and hospital
+                    capacities are fictional. No emergency calls, alerts,
+                    GPS data or real dispatches are transmitted.
+                </div>
+            </section>
+
+
+            <!-- INCIDENT REGISTER -->
+
+            <section id="incidents" class="view">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Incident management</div>
+                        <h1>Incident register</h1>
+                        <div class="muted">
+                            All simulated cases including resolved incidents.
+                        </div>
+                    </div>
+                    <button class="primary" id="newIncident2">
+                        + New incident
+                    </button>
+                </div>
+
+                <div class="panel tablewrap" id="incidentTable"></div>
+            </section>
+
+
+            <!-- RESPONSE RESOURCES -->
+
+            <section id="resources" class="view">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Fleet & readiness</div>
+                        <h1>Response resources</h1>
+                        <div class="muted">
+                            Government and approved partner resource model.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-cards" id="resourceCards"></div>
+            </section>
+
+
+            <!-- COVERAGE ZONES -->
+
+            <section id="zones" class="view">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Geographic planning</div>
+                        <h1>Coverage zones</h1>
+                        <div class="muted">
+                            All 20 LGAs · Proposed planning areas
+                        </div>
+                    </div>
+                </div>
+
+                <div class="zonegrid" id="zoneCards"></div>
+            </section>
+
+
+            <!-- HOSPITAL COORDINATION -->
+
+            <section id="hospitals" class="view">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Clinical coordination</div>
+                        <h1>Hospital coordination</h1>
+                        <div class="muted">
+                            Fictional facility availability.
+                            Requires receiving clinician confirmation.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel tablewrap">
+                    <table class="datatable">
+                        <thead>
+                            <tr>
+                                <th>Demo facility</th>
+                                <th>Zone</th>
+                                <th>Capability</th>
+                                <th>Open ED spaces</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hospitalRows"></tbody>
+                    </table>
+                </div>
+
+                <p class="notice">
+                    These facilities and bed counts do not represent
+                    real hospitals or clinical advice.
+                </p>
+            </section>
+
+
+            <!-- HEALTHCARE WORKFORCE -->
+
+            <section class="view" id="workforce">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">
+                            Capacity planning / clinical workforce
+                        </div>
+                        <h1>Workforce & reserve network</h1>
+                        <div class="muted">
+                            Estimate staffing and schedule eligible
+                            professionals for paid extra shifts.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="commercial-note">
+                    An ambulance is operational only with a verified,
+                    qualified crew. Additional shifts require licence,
+                    employer and fatigue checks.
+                </div>
+
+                <div class="workspace">
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Workforce sizing</h2>
+                        </div>
+
+                        <div class="panelbody formgrid" id="workInputs">
+
+                            <label>
+                                24-hour ambulances
+                                <input type="number" id="wUnits"
+                                       min="1" max="500" value="10">
+                            </label>
+
+                            <label>
+                                Clinical posts per ambulance
+                                <select id="wCrew">
+                                    <option>1</option>
+                                    <option selected>2</option>
+                                    <option>3</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Reserve share (%)
+                                <input type="number" id="wShare"
+                                       min="0" max="100" value="30">
+                            </label>
+
+                            <label>
+                                Extra shifts / eligible worker / week
+                                <input type="number" id="wShifts"
+                                       min="1" max="3" value="2">
+                            </label>
+
+                            <label>
+                                Payment / 8-hour shift (₦)
+                                <input type="number" id="wPay"
+                                       min="0" max="1000000" value="20000">
+                            </label>
+
+                            <label>
+                                Effective core hours / week
+                                <input type="number" id="wHours"
+                                       min="1" max="48" value="32">
+                            </label>
+
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Indicative staffing requirement</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <div class="metrics compact" id="workMetrics"
+                                 style="grid-template-columns:repeat(2,minmax(0,1fr))">
+                            </div>
+
+                            <p class="muted">
+                                Eight-hour shifts; 52 weeks per year.
+                                Actual skill mix and shift coverage require
+                                an approved roster. Additional backup staff,
+                                drivers and other costs need validation.
+                            </p>
+                        </div>
+                    </section>
+
+                </div>
+
+                <h2 class="sectiontitle">Demo reserve shift register</h2>
+                <div class="panel tablewrap" id="shiftRows"></div>
+
+                <div class="notice">
+                    Sample workers and shifts are fictional.
+                    No real scheduling, verification or payment occurs.
+                </div>
+            </section>
+
+
+            <!-- MEMBERSHIP MANAGEMENT -->
+
+            <section class="view" id="memberships">
+
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">
+                            Commercial / consumer & corporate
+                        </div>
+                        <h1>Membership management</h1>
+                        <div class="muted">
+                            Optional additional benefits.
+                            No effect on emergency response priority.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="commercial-note">
+                    Public access stays free to request. Paid benefits
+                    are proposed and subject to approval and partner terms.
+                </div>
+
+                <div class="plans" id="planCards"></div>
+                <div class="metrics compact" id="memberMetrics"></div>
+
+                <div class="workspace">
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Register demo account</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <form id="memberForm" class="formgrid">
+
+                                <label>
+                                    Account label (fictional)
+                                    <input name="name" required
+                                           maxlength="60"
+                                           placeholder="Demo member">
+                                </label>
+
+                                <label>
+                                    Plan
+                                    <select name="plan" id="memberPlan">
+                                        <option>Basic</option>
+                                        <option>Individual</option>
+                                        <option>Family</option>
+                                        <option>Elite</option>
+                                        <option>Corporate</option>
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Billing cycle
+                                    <select name="cycle">
+                                        <option>Monthly</option>
+                                        <option>Annual</option>
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Corporate annual quote (₦)
+                                    <input name="quote" type="number"
+                                           value="2000000"
+                                           min="0" max="1000000000">
+                                </label>
+
+                                <button class="primary" type="submit">
+                                    Create demo account
+                                </button>
+
+                            </form>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Commercial safeguards</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <p>
+                                Free and premium emergencies are prioritised
+                                by clinical urgency, never subscription status.
+                            </p>
+                            <p>
+                                Corporate agreements and commercial use
+                                of government assets require approval.
+                                Insurance benefits require licensed partners.
+                            </p>
+                            <p>
+                                Accounts are separate from incident records.
+                                There is no payment gate on emergency dispatch.
+                            </p>
+                        </div>
+                    </section>
+
+                </div>
+
+                <h2 class="sectiontitle">Account register</h2>
+                <div class="panel tablewrap" id="memberRows"></div>
+
+            </section>
+
+
+            <!-- BILLING AND INSURANCE -->
+
+            <section class="view" id="billing">
+
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Commercial / finance</div>
+                        <h1>Billing & claims</h1>
+                        <div class="muted">
+                            Simulated commercial invoices and insurance referrals.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="commercial-note">
+                    Only optional, authorised services are billed here.
+                    No upfront payment requirement for emergencies.
+                    No double billing of publicly funded care.
+                </div>
+
+                <div class="metrics compact" id="billMetrics"></div>
+
+                <div class="workspace">
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>New optional service invoice</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <form id="billForm" class="formgrid">
+
+                                <label>
+                                    Account
+                                    <select name="account" id="billAccount"></select>
+                                </label>
+
+                                <label>
+                                    Service
+                                    <select name="service">
+                                        <option>Scheduled non-emergency transport</option>
+                                        <option>Home healthcare visit</option>
+                                        <option>Event medical standby</option>
+                                        <option>Non-emergency teleconsultation</option>
+                                        <option>Roadside assistance</option>
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Agreed amount (₦)
+                                    <input name="amount" type="number"
+                                           min="1" max="1000000000"
+                                           required value="15000">
+                                </label>
+
+                                <label>
+                                    Payer
+                                    <select name="payer">
+                                        <option>Member / organisation</option>
+                                        <option>Licensed insurance partner</option>
+                                    </select>
+                                </label>
+
+                                <label style="grid-column:1/-1;
+                                              display:flex;
+                                              align-items:center;
+                                              gap:7px">
+                                    <input type="checkbox" name="approved"
+                                           required style="width:auto">
+                                    Confirm optional service, approved tariff
+                                    and no public double billing
+                                </label>
+
+                                <button type="submit" class="primary">
+                                    Create demo invoice
+                                </button>
+
+                            </form>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>Payment & insurance rules</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <p>
+                                Membership fees and invoices are not profit.
+                                Provider payments, premiums, refunds and
+                                other costs are excluded here.
+                            </p>
+                            <p>
+                                Insurance referrals remain pending until
+                                reviewed by an authorised payer.
+                                Payments are local simulations only.
+                            </p>
+                        </div>
+                    </section>
+
+                </div>
+
+                <h2 class="sectiontitle">Invoice register</h2>
+                <div class="panel tablewrap" id="billRows"></div>
+            </section>
+
+
+            <!-- CITIZEN PORTAL -->
+
+            <section class="view" id="citizen">
+
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Public experience / demo</div>
+                        <h1>Citizen portal</h1>
+                        <div class="muted">
+                            A preview of the resident-facing application.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="citizenbox stack">
+
+                    <section class="panel">
+                        <div class="panelbody">
+                            <h2>Emergency assistance</h2>
+                            <p>
+                                For everyone, even without an account
+                                or paid membership.
+                            </p>
+
+                            <button class="sos" id="citizenSOS">
+                                SOS — create simulated incident
+                            </button>
+
+                            <p class="notice">
+                                Demo only. For a real emergency use official
+                                emergency channels. This app does not
+                                contact responders.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panelhead">
+                            <h2>My optional protection plan</h2>
+                        </div>
+
+                        <div class="panelbody">
+                            <label class="muted">
+                                Preview a demo account
+                            </label>
+
+                            <select id="citizenAccount"
+                                    style="width:100%;padding:10px;
+                                    border:1px solid var(--line);
+                                    border-radius:6px;margin:5px 0 14px">
+                            </select>
+
+                            <div id="citizenPlan"></div>
+
+                            <button data-jump="memberships"
+                                    style="margin-top:12px">
+                                Explore membership options
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+            </section>
+
+
+            <!-- ACTIVITY LOG -->
+
+            <section id="audit" class="view">
+                <div class="headline">
+                    <div>
+                        <div class="eyebrow">Accountability</div>
+                        <h1>Activity log</h1>
+                        <div class="muted">
+                            Simulated event history for this session.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panelbody" id="auditRows"></div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+
+<!-- EMERGENCY INCIDENT FORM -->
+
+<dialog id="incidentDialog">
+    <form id="incidentForm">
+
+        <h2>Create simulated incident</h2>
+
+        <div class="muted">
+            Use fictional information only.
+            This cannot request emergency assistance.
+        </div>
+
+        <label>
+            Service
+            <select name="type">
+                <option>Medical</option>
+                <option>Fire</option>
+                <option>Road rescue</option>
+                <option>Water rescue</option>
+                <option>Security liaison</option>
+                <option>Air coordination</option>
+                <option>Disaster</option>
+            </select>
+        </label>
+
+        <label>
+            Planning zone
+            <select name="zone" id="formZone"></select>
+        </label>
+
+        <label>
+            Incident summary
+            <input name="title" required maxlength="80"
+                   placeholder="e.g. Simulated medical request">
+        </label>
+
+        <label>
+            Demo priority
+            <select name="priority">
+                <option>High</option>
+                <option>Critical</option>
+                <option>Routine</option>
+            </select>
+        </label>
+
+        <div class="modalactions">
+            <button type="button" id="cancel">Cancel</button>
+            <button class="primary" type="submit">
+                Create incident
+            </button>
+        </div>
+
+    </form>
+</dialog>
+
+<div id="toast" role="status"></div>
+
+<script src="app.js"></script>
+<script src="membership.js"></script>
+
+</body>
+</html>
